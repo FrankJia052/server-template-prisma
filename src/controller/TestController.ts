@@ -23,7 +23,8 @@ export class TestController {
             })
             res.setData(result)
             res.sendSuccessRes(response, HttpSuccessStatus.Created)
-        } catch (err) {            
+        } catch (err) {        
+            // throw err
             res.sendErrorRes(response, err as Error)
         }
     }

@@ -1,8 +1,11 @@
 import express from 'express';
+import 'express-async-errors'
 import { CLog } from './helper/AppHelper';
 import cors from 'cors';
 import routes from './routes';
 import { PrismaClient } from '@prisma/client';
+import { NotFoundError } from './errors/not-found-error';
+import { errorHandler } from './middlewares/error-handler';
 
 if(!process.env.HTTP_PORT) {
     require('dotenv-flow').config()
@@ -25,6 +28,12 @@ app.use(express.json())
 app.use('*', cors())
 
 app.use('/', routes)
+
+app.all("*", () => {
+    throw new NotFoundError()
+})
+
+app.use(errorHandler)
 
 const server = app.listen(SERVER_PORT, () => {
     CLog.ok(`NODE_ENV is : ${process.env.NODE_ENV}.\n Express server has started on port ${SERVER_PORT}.`)
